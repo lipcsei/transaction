@@ -3,7 +3,10 @@ package db
 import (
 	"sync"
 
+	"github.com/foosio/api/lib/services/env"
+
 	mgo "gopkg.in/mgo.v2"
+	redis "gopkg.in/redis.v4"
 )
 
 var (
@@ -31,7 +34,7 @@ func (m *Mongo) GetCollection(collectionName string) (*mgo.Collection, *mgo.Sess
 }
 
 func (m *Mongo) connect() (s *mgo.Session, i *mgo.DialInfo, err error) {
-	dialURI := "mongodb://127.0.0.1:27017/test"
+	dialURI := env.Get("MONGODB_URI", "mongodb://127.0.0.1:27017/foosio")
 
 	i, err = mgo.ParseURL(dialURI)
 	s, err = mgo.Dial(dialURI)
@@ -44,4 +47,15 @@ func (m *Mongo) connect() (s *mgo.Session, i *mgo.DialInfo, err error) {
 	s.SetSafe(&mgo.Safe{})
 
 	return
+}
+
+type Redis struct{}
+
+func (r *Redis) connect() *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     env.Get("REDIS_HOST", "localhost:6379"),
+		Password: "",
+		DB:       0,
+	})
+	return client
 }
