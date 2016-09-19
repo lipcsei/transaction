@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/foosio/api/lib/services/db"
@@ -10,31 +11,26 @@ import (
 	redis "gopkg.in/redis.v4"
 )
 
-type Redis struct{}
-
-func (r *Redis) connect() *redis.Client {
-	client := redis.NewClient(&redis.Options{
-		Addr:     env.Get("REDIS_HOST", "localhost:6379"),
-		Password: "",
-		DB:       0,
-	})
-	return client
-}
-
-var mongo *db.Mongo
+var (
+	mongo *db.Mongo
+)
 
 const LIMIT = 100
 
-type User struct {
-	ID   string `json:"id" bson:"_id,omitempty"`
-	Name string `json:"name" bson:"name" fako:"full_name"`
-}
+type (
+	// User struct represent a User
+	User struct {
+		ID   string `json:"id" bson:"_id,omitempty"`
+		Name string `json:"name" bson:"name" fako:"full_name"`
+	}
 
-type Game struct {
-	ID    string `json:"id" bson:"_id,omitempty"`
-	Size  int    `json:"size" bson:"size"`
-	Users []User `json:"users" bson:"users"`
-}
+	// Game struct represent a Game
+	Game struct {
+		ID    string `json:"id" bson:"_id,omitempty"`
+		Size  int    `json:"size" bson:"size"`
+		Users []User `json:"users" bson:"users"`
+	}
+)
 
 func Join(gameID string, userID int) {
 	collection, session := mongo.GetCollection("transaction")
@@ -47,6 +43,8 @@ func Join(gameID string, userID int) {
 }
 
 func main() {
+	client := ConnectToRedis()
+	fmt.Println(client)
 
 	gameID := "1"
 	collection, session := mongo.GetCollection("transaction")
@@ -59,4 +57,15 @@ func main() {
 		Join(gameID, userID)
 	}
 
+	// err := client.Set("sd", 23).Err()
+	// fmt.Println(err)
+}
+
+func ConnectToRedis() *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     env.Get("REDIS_HOST", "localhost:6379"),
+		Password: "",
+		DB:       0,
+	})
+	return client
 }
