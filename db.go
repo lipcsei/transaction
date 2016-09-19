@@ -6,7 +6,6 @@ import (
 	"github.com/foosio/api/lib/services/env"
 
 	mgo "gopkg.in/mgo.v2"
-	redis "gopkg.in/redis.v4"
 )
 
 var (
@@ -47,15 +46,4 @@ func (m *Mongo) connect() (s *mgo.Session, i *mgo.DialInfo, err error) {
 	s.SetSafe(&mgo.Safe{})
 
 	return
-}
-
-type Redis struct{}
-
-func (r *Redis) connect() *redis.Client {
-	client := redis.NewClient(&redis.Options{
-		Addr:     env.Get("REDIS_HOST", "localhost:6379"),
-		Password: "",
-		DB:       0,
-	})
-	return client
 }
