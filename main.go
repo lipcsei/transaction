@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/foosio/api/lib/services/db"
@@ -35,6 +34,8 @@ type (
 func Join(gameID string, userID int) {
 	collection, session := mongo.GetCollection("transaction")
 	defer session.Close()
+	client := ConnectToRedis()
+	defer client.Close()
 
 	user := User{ID: strconv.Itoa(userID + 1)}
 	fako.Fill(&user)
@@ -43,8 +44,6 @@ func Join(gameID string, userID int) {
 }
 
 func main() {
-	client := ConnectToRedis()
-	fmt.Println(client)
 
 	gameID := "1"
 	collection, session := mongo.GetCollection("transaction")
@@ -57,8 +56,6 @@ func main() {
 		Join(gameID, userID)
 	}
 
-	// err := client.Set("sd", 23).Err()
-	// fmt.Println(err)
 }
 
 func ConnectToRedis() *redis.Client {
