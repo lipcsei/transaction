@@ -1,15 +1,37 @@
 {
 	"apps" : [
 		{
-			"name" : "Transaction",
+			"name" : "Transaction 1",
 			"interpreter" : "/usr/lib/go-1.6/bin/go",
 			"interpreter_args" : "run",
 			"script" : "./main.go",
-			"watch" : true,
+			"watch" : false,
 			"env" : {
 				"PORT" : 5000,
 				"MONGODB_URI" : "mongodb://127.0.0.1:27017/transaction"
 			}
-		}
+		},
+		{
+			"name" : "Transaction 2",
+			"interpreter" : "/usr/lib/go-1.6/bin/go",
+			"interpreter_args" : "run",
+			"script" : "./main.go",
+			"watch" : false,
+			"env" : {
+				"PORT" : 5000,
+				"MONGODB_URI" : "mongodb://127.0.0.1:27017/transaction"
+			}
+		},
+		{
+			"name" : "Transaction 3",
+			"interpreter" : "/usr/lib/go-1.6/bin/go",
+			"interpreter_args" : "run",
+			"script" : "./main.go",
+			"watch" : false,
+			"env" : {
+				"PORT" : 5000,
+				"MONGODB_URI" : "mongodb://127.0.0.1:27017/transaction"
+			}
+		},
 	]
 }
